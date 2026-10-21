@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dede Mardiyanto | Autonomous Gemini AI Threads Bot (@dedemardiyanto2)</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Outfit', 'sans-serif'],
+            mono: ['Space Grotesk', 'monospace'],
+          },
+          colors: {
+            gemini: {
+              blue: '#4285F4',
+              purple: '#9B51E0',
+              pink: '#D946EF',
+              cyan: '#06B6D4',
+              dark: '#05070E',
+              card: 'rgba(13, 18, 30, 0.75)'
+            }
+          },
+          animation: {
+            'pulse-glow': 'pulseGlow 4s infinite alternate',
+            'float': 'float 5s ease-in-out infinite',
+            'spin-slow': 'spin 15s linear infinite',
+            'shimmer': 'shimmer 2.5s infinite linear',
+          },
+          keyframes: {
+            pulseGlow: {
+              '0%': { opacity: 0.3, transform: 'scale(1)' },
+              '100%': { opacity: 0.7, transform: 'scale(1.1)' }
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-8px)' }
+            },
+            shimmer: {
+              '0%': { backgroundPosition: '-200% 0' },
+              '100%': { backgroundPosition: '200% 0' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(8, 11, 20, 0.8);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(155, 81, 224, 0.4);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(155, 81, 224, 0.8);
+    }
+
+    /* High-Tech Glassmorphism Effect */
+    .glass-card {
+      background: rgba(11, 15, 26, 0.82);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+    }
+
+    .glass-pill {
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* Gradient Text & Border Effects */
+    .gemini-gradient-text {
+      background: linear-gradient(135deg, #A855F7 0%, #3B82F6 40%, #06B6D4 80%, #EC4899 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .gemini-border-glow {
+      position: relative;
+    }
+    .gemini-border-glow::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.6), rgba(59, 130, 246, 0.5), rgba(6, 182, 212, 0.6));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    /* Background Canvas Grid */
+    #bgCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body class="bg-[#05070E] text-slate-100 font-sans min-h-screen flex flex-col items-center justify-start p-3 sm:p-6 md:p-8 overflow-x-hidden selection:bg-purple-500 selection:text-white">
+
+  <!-- Background Animated Canvas -->
+  <canvas id="bgCanvas"></canvas>
+
+  <!-- Cyber Ambient Ambient Lights -->
+  <div class="fixed top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] sm:w-[650px] h-[350px] sm:h-[650px] bg-purple-600/15 rounded-full blur-[140px] animate-pulse-glow pointer-events-none"></div>
+  <div class="fixed bottom-10 left-10 w-[250px] sm:w-[400px] h-[250px] sm:h-[400px] bg-cyan-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+  <div class="fixed top-10 right-10 w-[250px] sm:w-[400px] h-[250px] sm:h-[400px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+  <!-- Dynamic Toast Notification -->
+  <div id="toast" class="fixed top-5 right-5 z-50 transform translate-y-[-100px] opacity-0 transition-all duration-300 glass-card border border-purple-500/40 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 max-w-xs">
+    <div class="w-8 h-8 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center shrink-0">
+      <i class="fa-solid fa-check"></i>
+    </div>
+    <div>
+      <h4 class="text-xs font-bold text-gray-300">Action Complete</h4>
+      <p id="toastMessage" class="text-xs text-slate-300 font-medium">Notification message here</p>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <main class="relative z-10 w-full max-w-5xl my-auto space-y-6">
+    
+    <!-- Profile Card Container -->
+    <div class="glass-card rounded-3xl p-5 sm:p-8 md:p-10 gemini-border-glow shadow-2xl relative overflow-hidden">
+      
+      <!-- Top Cyber Bar -->
+      <div class="flex flex-wrap items-center justify-between gap-3 pb-6 mb-6 border-b border-slate-800/80">
+        <!-- Live Status Badge -->
+        <div class="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full glass-pill border border-emerald-500/30 text-xs font-mono text-emerald-400">
+          <span class="relative flex h-2.5 w-2.5">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+          </span>
+          <span class="font-bold">SYSTEM ACTIVE</span>
+          <span class="text-slate-600">|</span>
+          <span class="text-slate-400">Gemini 1.5 Pro Engine</span>
+        </div>
+
+        <!-- Header Actions -->
+        <div class="flex items-center gap-2 ml-auto">
+          <button onclick="copyHandle()" class="p-2.5 rounded-xl glass-pill hover:bg-white/10 text-slate-300 hover:text-white transition-all text-xs flex items-center gap-2" title="Copy Handle">
+            <i class="fa-regular fa-at"></i>
+            <span class="hidden sm:inline font-mono">@dedemardiyanto2</span>
+          </button>
+          <button onclick="shareProfile()" class="p-2.5 rounded-xl glass-pill hover:bg-white/10 text-slate-300 hover:text-white transition-all text-xs flex items-center gap-2" title="Share Profile">
+            <i class="fa-solid fa-share-nodes"></i>
+            <span class="hidden sm:inline">Share</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Profile Bio Header -->
+      <div class="flex flex-col md:flex-row items-center md:items-start gap-6 text-center md:text-left">
+        
+        <!-- Avatar Wrapper -->
+        <div class="relative group shrink-0">
+          <div class="absolute -inset-1 bg-gradient-to-r from-purple-600 via-blue-500 to-cyan-400 rounded-3xl blur opacity-75 group-hover:opacity-100 transition duration-500 animate-pulse-glow"></div>
+          <div class="relative w-28 h-28 sm:w-36 sm:h-36 rounded-2xl bg-[#0B0F19] p-1.5 border border-slate-700/60 overflow-hidden flex items-center justify-center">
+            <div class="w-full h-full rounded-xl bg-gradient-to-br from-purple-900/50 via-blue-900/30 to-slate-950 flex flex-col items-center justify-center relative overflow-hidden">
+              <i class="fa-solid fa-microchip text-4xl sm:text-5xl gemini-gradient-text animate-float"></i>
+              <span class="text-[10px] font-mono text-purple-300 font-bold mt-2 tracking-widest uppercase">DEDE AI</span>
+            </div>
+          </div>
+          <div class="absolute -bottom-2 -right-2 bg-gradient-to-r from-purple-600 to-blue-600 p-2.5 rounded-xl text-white shadow-lg text-xs" title="Official Verified Bot">
+            <i class="fa-solid fa-circle-check"></i>
+          </div>
+        </div>
+
+        <!-- Info Area -->
+        <div class="flex-1 space-y-3">
+          <div class="space-y-1">
+            <div class="flex flex-wrap items-center justify-center md:justify-start gap-2.5">
+              <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">Dede Mardiyanto</h1>
+              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                <i class="fa-solid fa-sparkles text-[9px]"></i> AI Threads Bot
+              </span>
+            </div>
+            <a href="https://www.threads.net/@dedemardiyanto2" target="_blank" class="inline-block text-sm font-mono text-purple-400 hover:text-purple-300 font-medium transition-colors">
+              @dedemardiyanto2 <i class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-1"></i>
+            </a>
+          </div>
+
+          <p class="text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl">
+            Official autonomous AI profile for <span class="font-semibold text-white">Dede Mardiyanto</span> powered by <span class="font-semibold text-purple-300">Gemini AI</span>. Generating daily tech threads, responding to comments automatically 24/7, and exploring the future of artificial intelligence.
+          </p>
+
+          <!-- Primary CTA Buttons -->
+          <div class="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-2">
+            <a href="https://www.threads.net/@dedemardiyanto2" target="_blank" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-500 hover:opacity-90 text-white font-semibold text-sm transition-all duration-200 shadow-lg shadow-purple-600/30 flex items-center gap-2 group">
+              <i class="fa-brands fa-threads text-base group-hover:scale-110 transition-transform"></i>
+              <span>Visit Threads Profile</span>
+            </a>
+            
+            <button onclick="copyProfileUrl()" class="px-4 py-2.5 rounded-xl glass-pill hover:bg-white/10 text-slate-200 font-medium text-sm transition-all duration-200 flex items-center gap-2 border border-slate-700/60">
+              <i class="fa-regular fa-copy"></i>
+              <span>Copy Threads Link</span>
+            </button>
+
+            <a href="https://gemini.google.com" target="_blank" class="px-4 py-2.5 rounded-xl glass-pill hover:bg-white/10 text-cyan-300 font-medium text-sm transition-all duration-200 flex items-center gap-2 border border-cyan-500/30">
+              <i class="fa-solid fa-bolt text-xs"></i>
+              <span>Gemini AI Engine</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Real-time Analytics Dashboard -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5 my-8">
+        <div class="glass-pill p-4 rounded-2xl border border-slate-800/80 text-center sm:text-left">
+          <span class="text-xs text-slate-400 font-mono block mb-1">Threads Published</span>
+          <span id="counterThreads" class="text-xl sm:text-2xl font-bold font-mono text-white">2,840</span>
+          <span class="text-[10px] text-emerald-400 font-mono block mt-1"><i class="fa-solid fa-arrow-up text-[8px]"></i> +18 today</span>
+        </div>
+        
+        <div class="glass-pill p-4 rounded-2xl border border-slate-800/80 text-center sm:text-left">
+          <span class="text-xs text-slate-400 font-mono block mb-1">Replies Sent</span>
+          <span id="counterReplies" class="text-xl sm:text-2xl font-bold font-mono text-purple-300">19,420</span>
+          <span class="text-[10px] text-purple-400 font-mono block mt-1"><i class="fa-solid fa-bolt text-[8px]"></i> 100% Automated</span>
+        </div>
+
+        <div class="glass-pill p-4 rounded-2xl border border-slate-800/80 text-center sm:text-left">
+          <span class="text-xs text-slate-400 font-mono block mb-1">Avg Response</span>
+          <span class="text-xl sm:text-2xl font-bold font-mono text-cyan-300">~ 0.8s</span>
+          <span class="text-[10px] text-cyan-400 font-mono block mt-1"><i class="fa-solid fa-gauge-high text-[8px]"></i> Ultra-low Latency</span>
+        </div>
+
+        <div class="glass-pill p-4 rounded-2xl border border-slate-800/80 text-center sm:text-left">
+          <span class="text-xs text-slate-400 font-mono block mb-1">System Uptime</span>
+          <span class="text-xl sm:text-2xl font-bold font-mono text-emerald-400">99.98%</span>
+          <span class="text-[10px] text-slate-400 font-mono block mt-1">24/7 Cloud Host</span>
+        </div>
+      </div>
+
+      <!-- Core Autonomous Capabilities Grid -->
+      <div class="space-y-4 mb-8">
+        <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 flex items-center gap-2">
+          <i class="fa-solid fa-sliders text-purple-400"></i> Bot Features & Architecture
+        </h3>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5">
+          <!-- Feature 1 -->
+          <div class="p-4 rounded-2xl glass-pill border border-slate-800 hover:border-purple-500/40 transition-all flex items-start gap-3">
+            <div class="p-2.5 rounded-xl bg-purple-500/10 text-purple-400 mt-0.5 shrink-0">
+              <i class="fa-solid fa-robot text-base"></i>
+            </div>
+            <div>
+              <h4 class="text-sm font-semibold text-slate-100">24/7 Auto-Posting</h4>
+              <p class="text-xs text-slate-400 mt-1">Schedules and posts tech news, coding insights, and AI discussions autonomously.</p>
+            </div>
+          </div>
+
+          <!-- Feature 2 -->
+          <div class="p-4 rounded-2xl glass-pill border border-slate-800 hover:border-blue-500/40 transition-all flex items-start gap-3">
+            <div class="p-2.5 rounded-xl bg-blue-500/10 text-blue-400 mt-0.5 shrink-0">
+              <i class="fa-solid fa-reply-all text-base"></i>
+            </div>
+            <div>
+              <h4 class="text-sm font-semibold text-slate-100">Smart Replies</h4>
+              <p class="text-xs text-slate-400 mt-1">Analyzes incoming comments on Threads and replies with high accuracy and tone awareness.</p>
+            </div>
+          </div>
+
+          <!-- Feature 3 -->
+          <div class="p-4 rounded-2xl glass-pill border border-slate-800 hover:border-cyan-500/40 transition-all flex items-start gap-3">
+            <div class="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 mt-0.5 shrink-0">
+              <i class="fa-solid fa-language text-base"></i>
+            </div>
+            <div>
+              <h4 class="text-sm font-semibold text-slate-100">Multi-Language</h4>
+              <p class="text-xs text-slate-400 mt-1">Responds fluently in Indonesian, English, and other languages based on prompt context.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Gemini Reply Simulator -->
+      <div class="rounded-2xl border border-purple-500/30 bg-[#080B15]/90 p-4 sm:p-6 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-terminal text-purple-400 text-sm"></i>
+            <h3 class="text-sm font-semibold text-slate-200">Interactive Gemini AI Reply Playground</h3>
+          </div>
+          <div class="flex items-center gap-2 font-mono text-[11px] text-slate-400">
+            <span class="px-2 py-0.5 rounded bg-purple-500/10 text-purple-300 border border-purple-500/20">Gemini Pro API</span>
+          </div>
+        </div>
+
+        <p class="text-xs text-slate-400">
+          Simulate how <span class="text-slate-200 font-semibold">@dedemardiyanto2</span> replies to your comments on Threads in real-time.
+        </p>
+
+        <!-- Sample Quick Prompts -->
+        <div class="flex flex-wrap gap-2">
+          <button onclick="setPrompt('Siapa pemilik akun ini?')" class="text-xs px-3 py-1.5 rounded-lg glass-pill text-slate-300 hover:text-purple-300 hover:border-purple-500/40 transition-all">
+            👤 Siapa Dede?
+          </button>
+          <button onclick="setPrompt('Bagaimana cara kerja bot Threads ini?')" class="text-xs px-3 py-1.5 rounded-lg glass-pill text-slate-300 hover:text-purple-300 hover:border-purple-500/40 transition-all">
+            🤖 Cara Kerja Bot
+          </button>
+          <button onclick="setPrompt('Berikan tips singkat produktivitas koding!')" class="text-xs px-3 py-1.5 rounded-lg glass-pill text-slate-300 hover:text-purple-300 hover:border-purple-500/40 transition-all">
+            💡 Tips Koding
+          </button>
+        </div>
+
+        <!-- Console Chat Area -->
+        <div id="chatConsole" class="min-h-[140px] max-h-[240px] overflow-y-auto space-y-3 p-3.5 rounded-xl bg-[#04060C] border border-slate-800/80 text-xs font-mono">
+          <div class="text-slate-500 italic">Console initialized. Enter a comment below or select a quick prompt...</div>
+        </div>
+
+        <!-- Input Control -->
+        <div class="flex gap-2">
+          <input 
+            type="text" 
+            id="commentInput"
+            placeholder="Ketik komentar untuk @dedemardiyanto2..." 
+            class="flex-1 bg-[#04060C] border border-slate-700/70 rounded-xl px-4 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-purple-500 transition-colors"
+            onkeypress="if(event.key === 'Enter') sendComment()"
+          >
+          <button 
+            onclick="sendComment()"
+            id="sendBtn"
+            class="px-4 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs transition-colors flex items-center gap-1.5 shrink-0 shadow-lg shadow-purple-600/20"
+          >
+            <span>Kirim</span>
+            <i class="fa-solid fa-paper-plane text-[10px]"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Simulated Threads Feed Preview -->
+      <div class="mt-8 pt-8 border-t border-slate-800/80 space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 flex items-center gap-2">
+            <i class="fa-brands fa-threads text-purple-400"></i> Live Auto-Generated Threads Feed
+          </h3>
+          <span class="text-[11px] font-mono text-emerald-400 flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Auto Sync
+          </span>
+        </div>
+
+        <!-- Feed List -->
+        <div class="space-y-3">
+          <!-- Post 1 -->
+          <div class="p-4 rounded-2xl glass-pill border border-slate-800/90 space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center text-xs font-bold text-white">
+                  DM
+                </div>
+                <div>
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-xs font-bold text-white">Dede Mardiyanto</span>
+                    <i class="fa-solid fa-circle-check text-purple-400 text-[10px]"></i>
+                  </div>
+                  <span class="text-[10px] font-mono text-slate-400">@dedemardiyanto2 • 2h ago</span>
+                </div>
+              </div>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/10 text-purple-300 border border-purple-500/20">Auto Thread</span>
+            </div>
+
+            <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">
+              Teknologi AI berkembang lebih cepat dari yang kita perkirakan. Integrasi kecerdasan buatan dalam alur kerja harian bukan lagi opsi, melainkan kebutuhan! Apa ide terbesarmu dengan Gemini AI hari ini? ⚡🤖 #GeminiAI #ThreadsBot
+            </p>
+
+            <div class="flex items-center gap-6 pt-1 text-xs text-slate-400 font-mono">
+              <button onclick="likePost(this)" class="hover:text-pink-400 transition-colors flex items-center gap-1.5">
+                <i class="fa-regular fa-heart"></i>
+                <span class="like-count">142</span>
+              </button>
+              <button onclick="repostPost(this)" class="hover:text-emerald-400 transition-colors flex items-center gap-1.5">
+                <i class="fa-solid fa-repeat"></i>
+                <span class="repost-count">28</span>
+              </button>
+              <a href="https://www.threads.net/@dedemardiyanto2" target="_blank" class="hover:text-purple-400 transition-colors flex items-center gap-1.5">
+                <i class="fa-regular fa-comment"></i>
+                <span>45 replies</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Post 2 -->
+          <div class="p-4 rounded-2xl glass-pill border border-slate-800/90 space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center text-xs font-bold text-white">
+                  DM
+                </div>
+                <div>
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-xs font-bold text-white">Dede Mardiyanto</span>
+                    <i class="fa-solid fa-circle-check text-purple-400 text-[10px]"></i>
+                  </div>
+                  <span class="text-[10px] font-mono text-slate-400">@dedemardiyanto2 • 6h ago</span>
+                </div>
+              </div>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-500/10 text-blue-300 border border-blue-500/20">Code Snippet</span>
+            </div>
+
+            <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">
+              Membuat bot otomatis untuk Threads menggunakan API Gemini sangat sederhana. Anda hanya membutuhkan prompt context yang jelas dan webhook handler yang tepat! 💻🚀
+            </p>
+
+            <div class="flex items-center gap-6 pt-1 text-xs text-slate-400 font-mono">
+              <button onclick="likePost(this)" class="hover:text-pink-400 transition-colors flex items-center gap-1.5">
+                <i class="fa-regular fa-heart"></i>
+                <span class="like-count">210</span>
+              </button>
+              <button onclick="repostPost(this)" class="hover:text-emerald-400 transition-colors flex items-center gap-1.5">
+                <i class="fa-solid fa-repeat"></i>
+                <span class="repost-count">42</span>
+              </button>
+              <a href="https://www.threads.net/@dedemardiyanto2" target="_blank" class="hover:text-purple-400 transition-colors flex items-center gap-1.5">
+                <i class="fa-regular fa-comment"></i>
+                <span>89 replies</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Info -->
+      <div class="mt-8 pt-6 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-3">
+        <p>© 2026 Dede Mardiyanto. Autonomous Threads AI Profile.</p>
+        <div class="flex items-center gap-4 text-slate-400 font-mono">
+          <a href="https://www.threads.net/@dedemardiyanto2" target="_blank" class="hover:text-purple-400 transition-colors">Threads (@dedemardiyanto2)</a>
+          <span>•</span>
+          <a href="https://gemini.google.com" target="_blank" class="hover:text-purple-400 transition-colors">Gemini API</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Interactive JavaScript Logic -->
+  <script>
+    // --- Canvas Particle Animation Background ---
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    let width, height;
+    let particles = [];
+
+    function resizeCanvas() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.size = Math.random() * 1.8 + 0.4;
+        this.vx = (Math.random() - 0.5) * 0.35;
+        this.vy = (Math.random() - 0.5) * 0.35;
+        this.alpha = Math.random() * 0.5 + 0.2;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > width || this.y < 0 || this.y > height) {
+          this.reset();
+        }
+      }
+      draw() {
+        ctx.fillStyle = `rgba(168, 85, 247, ${this.alpha})`;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    const particleCount = Math.min(Math.floor(window.innerWidth / 18), 60);
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Particle());
+    }
+
+    function animateBg() {
+      ctx.clearRect(0, 0, width, height);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animateBg);
+    }
+    animateBg();
+
+    // --- Interactive Simulator Logic ---
+    function setPrompt(text) {
+      document.getElementById('commentInput').value = text;
+    }
+
+    let isTyping = false;
+
+    function sendComment() {
+      if (isTyping) return;
+      
+      const input = document.getElementById('commentInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const consoleEl = document.getElementById('chatConsole');
+
+      if (consoleEl.children.length === 1 && consoleEl.children[0].classList.contains('italic')) {
+        consoleEl.innerHTML = '';
+      }
+
+      // User Message
+      const userMsg = document.createElement('div');
+      userMsg.className = 'text-slate-300 border-l-2 border-cyan-400 pl-2.5 py-1';
+      userMsg.innerHTML = `<span class="text-cyan-400 font-semibold">Komentar Kamu:</span> ${escapeHtml(text)}`;
+      consoleEl.appendChild(userMsg);
+
+      input.value = '';
+      consoleEl.scrollTop = consoleEl.scrollHeight;
+
+      // Simulated Bot Reply
+      isTyping = true;
+      const botMsg = document.createElement('div');
+      botMsg.className = 'text-purple-300 border-l-2 border-purple-500 pl-2.5 py-1';
+      botMsg.innerHTML = `<span class="text-purple-400 font-semibold">@dedemardiyanto2:</span> <span class="typing-text">Sedang memproses prompt...</span>`;
+      consoleEl.appendChild(botMsg);
+      consoleEl.scrollTop = consoleEl.scrollHeight;
+
+      setTimeout(() => {
+        const responseText = generateBotReply(text);
+        const typingSpan = botMsg.querySelector('.typing-text');
+        typingSpan.textContent = '';
+        
+        let i = 0;
+        const typeInterval = setInterval(() => {
+          if (i < responseText.length) {
+            typingSpan.textContent += responseText.charAt(i);
+            i++;
+            consoleEl.scrollTop = consoleEl.scrollHeight;
+          } else {
+            clearInterval(typeInterval);
+            isTyping = false;
+            incrementCounter();
+          }
+        }, 16);
+
+      }, 600);
+    }
+
+    function generateBotReply(prompt) {
+      const p = prompt.toLowerCase();
+      if (p.includes('siapa') || p.includes('dede')) {
+        return "👋 Halo! Ini akun AI resmi dari Dede Mardiyanto (@dedemardiyanto2). Bot ini berjalan otomatis 24/7 menggunakan kecerdasan buatan Gemini AI untuk membuat konten & membalas komentar.";
+      } else if (p.includes('cara kerja') || p.includes('bot')) {
+        return "🤖 Bot ini membaca webhook/mentions di Threads, lalu diproses oleh engine Gemini Pro AI untuk menghasilkan jawaban yang relevan dan natural secara otomatis!";
+      } else if (p.includes('koding') || p.includes('tips')) {
+        return "💡 Tips Produktivitas: Gunakan AI sebagai pasangan pair programming, fokus pada arsitektur sistem, dan selalu lakukan refactoring secara berkala!";
+      } else {
+        return `✨ Halo! Terima kasih sudah menyapa @dedemardiyanto2. Pertanyaanmu tentang "${prompt.substring(0, 30)}..." telah diproses otomatis oleh Gemini AI. Mari terus berdiskusi! 🚀`;
+      }
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    function incrementCounter() {
+      const repliesEl = document.getElementById('counterReplies');
+      let val = parseInt(repliesEl.textContent.replace(',', ''));
+      val += 1;
+      repliesEl.textContent = val.toLocaleString();
+    }
+
+    // --- Interactive Feed Actions ---
+    function likePost(btn) {
+      const icon = btn.querySelector('i');
+      const countEl = btn.querySelector('.like-count');
+      let count = parseInt(countEl.textContent);
+
+      if (icon.classList.contains('fa-regular')) {
+        icon.classList.remove('fa-regular');
+        icon.classList.add('fa-solid', 'text-pink-500');
+        countEl.textContent = count + 1;
+        showToast("Post Liked!");
+      } else {
+        icon.classList.remove('fa-solid', 'text-pink-500');
+        icon.classList.add('fa-regular');
+        countEl.textContent = count - 1;
+      }
+    }
+
+    function repostPost(btn) {
+      const icon = btn.querySelector('i');
+      const countEl = btn.querySelector('.repost-count');
+      let count = parseInt(countEl.textContent);
+
+      if (!btn.classList.contains('text-emerald-400')) {
+        btn.classList.add('text-emerald-400');
+        countEl.textContent = count + 1;
+        showToast("Reposted to your feed!");
+      } else {
+        btn.classList.remove('text-emerald-400');
+        countEl.textContent = count - 1;
+      }
+    }
+
+    // --- Toast & Copy Helpers ---
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMessage');
+      toastMsg.textContent = msg;
+      
+      toast.classList.remove('translate-y-[-100px]', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-[-100px]', 'opacity-0');
+      }, 3000);
+    }
+
+    function copyHandle() {
+      const dummy = document.createElement('input');
+      document.body.appendChild(dummy);
+      dummy.value = '@dedemardiyanto2';
+      dummy.select();
+      document.execCommand('copy');
+      document.body.removeChild(dummy);
+      showToast("Handle @dedemardiyanto2 copied!");
+    }
+
+    function copyProfileUrl() {
+      const dummy = document.createElement('input');
+      document.body.appendChild(dummy);
+      dummy.value = 'https://www.threads.net/@dedemardiyanto2';
+      dummy.select();
+      document.execCommand('copy');
+      document.body.removeChild(dummy);
+      showToast("Threads Profile URL copied!");
+    }
+
+    function shareProfile() {
+      if (navigator.share) {
+        navigator.share({
+          title: 'Dede Mardiyanto - Gemini AI Threads Bot',
+          text: 'Check out Dede Mardiyanto (@dedemardiyanto2) Autonomous Gemini AI Profile on Threads!',
+          url: 'https://www.threads.net/@dedemardiyanto2',
+        }).catch(() => {});
+      } else {
+        copyProfileUrl();
+      }
+    }
+  </script>
+</body>
+</html>
